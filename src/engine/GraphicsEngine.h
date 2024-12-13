@@ -8,13 +8,13 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-
+#include "custom/MyEngineSystem.h"
 #include "EngineCommon.h"
 #include "GameMath.h"
 
 /* ENGINE DEFAULT SETTINGS */
-static const int DEFAULT_WINDOW_WIDTH = 800;
-static const int DEFAULT_WINDOW_HEIGHT = 600;
+static const int DEFAULT_WINDOW_WIDTH = 1280;
+static const int DEFAULT_WINDOW_HEIGHT = 720;
 
 static const SDL_Color SDL_COLOR_GRAY	= { 0x80, 0x80, 0x80 };
 static const SDL_Color SDL_COLOR_YELLOW = { 0xFF, 0xFF, 0 };
@@ -52,7 +52,7 @@ class GraphicsEngine {
 	friend class XCube2Engine;
 	private:
 		SDL_Window * window;
-		static SDL_Renderer * renderer;
+		
 		SDL_Color drawColor;
 
 		TTF_Font * font;
@@ -62,6 +62,10 @@ class GraphicsEngine {
 		GraphicsEngine();
 
 	public:	
+
+		
+		static SDL_Renderer * renderer; //I moved the renderer to public so MyEngineSystem can access it.
+
 		~GraphicsEngine();
 
 		void useFont(TTF_Font * font);
@@ -99,6 +103,8 @@ class GraphicsEngine {
 
 		void setDrawColor(const SDL_Color &);
 		void setDrawScale(const Vector2f &);	// not tested
+
+		
 
 		/**
 		* @param fileName - name of the icon file
@@ -139,6 +145,25 @@ class GraphicsEngine {
 
 		static SDL_Texture * createTextureFromSurface(SDL_Surface *);
 		static SDL_Texture * createTextureFromString(const std::string &, TTF_Font *, SDL_Color);
+
+		
+
+		//My code
+		//Button
+		void DrawButton(Button button);
+
+		//Slider
+		void DrawSlider(Slider slider);
+
+		//Loading bar
+		void DrawLoadingBar(LoadingBar loadingBar);
+
+		//9Slice Texture draw
+		void Draw9Slice(SDL_Texture* cornerTexture, SDL_Texture* edgeXTexture,
+		SDL_Texture* edgeYTexture, SDL_Texture* centreTexture,
+		int xPos, int yPos, int width, int height, int cornerSize);
+		
+		void draw_circle(SDL_Renderer*, int, int, int, SDL_Color);
 };
 
 typedef GraphicsEngine GFX;

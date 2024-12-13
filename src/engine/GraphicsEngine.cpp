@@ -260,3 +260,124 @@ void GraphicsEngine::drawText(const std::string & text, const int &x, const int 
 	drawTexture(textTexture, &dst);
 	SDL_DestroyTexture(textTexture);
 }
+
+//My Code
+
+//Button Code
+
+void GraphicsEngine::DrawButton(Button button)
+{
+	SDL_Rect rect = {button.xPos, button.yPos, button.cornerSize, button.cornerSize };
+	if (button.buttonState == 1)
+	{
+		Draw9Slice(button.clickCornerTexture, button.clickXEdgeTexture, button.clickYEdgeTexture, button.clickCentreTexture, button.xPos, button.yPos, button.width, button.height, button.cornerSize);
+	}
+	else if (button.buttonState == 2)
+	{
+		Draw9Slice(button.hoverCornerTexture, button.hoverXEdgeTexture, button.hoverYEdgeTexture, button.hoverCentreTexture, button.xPos, button.yPos, button.width, button.height, button.cornerSize);
+	}
+	else
+	{
+		Draw9Slice(button.idleCornerTexture, button.idleXEdgeTexture, button.idleYEdgeTexture, button.idleCentreTexture, button.xPos, button.yPos,button.width, button.height, button.cornerSize);
+	}
+	//setDrawColor(button.textColor);
+	//drawText(button.text, button.xPos, button.yPos);
+}
+
+void GraphicsEngine::DrawSlider(Slider slider)
+{
+	setDrawColor(slider.sliderColor);
+	fillRect(slider.sliderXPos, slider.sliderYPos, slider.sliderWidth, slider.sliderHeight);
+	setDrawColor(slider.circleColor);
+	//slider.circleCentre = Point2(slider.sliderXPos, slider.sliderYPos + (slider.sliderHeight/2));
+	drawEllipse(Point2(slider.sliderXPos + (slider.currentValue * (slider.sliderWidth/slider.maxValue)),
+		slider.sliderYPos + (slider.sliderHeight / 2)), slider.circleRadius, slider.circleRadius);
+	/*draw_circle(renderer, slider.sliderXPos + (slider.currentValue * (slider.sliderWidth / slider.maxValue),
+		slider.sliderYPos + (slider.sliderHeight / 2)), slider.circleRadius, slider.circleRadius);
+	setDrawColor(slider.valueColor);*/
+	slider.valueText = std::to_string(slider.currentValue);
+	drawText(slider.valueText, slider.sliderXPos + slider.sliderWidth, slider.sliderYPos);
+	
+
+
+}
+/* Draws circle - https://stackoverflow.com/questions/65723827/sdl2-function-to-draw-a-filled-circle */
+void GraphicsEngine::draw_circle(SDL_Renderer* renderer, int x, int y, int radius, SDL_Color color)
+{
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	for (int w = 0; w < radius * 2; w++)
+	{
+		for (int h = 0; h < radius * 2; h++)
+		{
+			int dx = radius - w; // horizontal offset
+			int dy = radius - h; // vertical offset
+			if ((dx * dx + dy * dy) <= (radius * radius))
+			{
+				SDL_RenderDrawPoint(renderer, x + dx, y + dy);
+			}
+		}
+	}
+}
+
+void GraphicsEngine::DrawLoadingBar(LoadingBar loadingBar)
+{
+
+	
+	setDrawColor(loadingBar.backgroundColor);
+	fillRect(loadingBar.loadingBarXPos, loadingBar.loadingBarYPos, loadingBar.loadingBarWidth, loadingBar.loadingBarHeight);
+	
+	
+	setDrawColor(loadingBar.barColor);
+	fillRect(loadingBar.loadingBarXPos, loadingBar.loadingBarYPos,
+	loadingBar.loadingBarWidth * (loadingBar.currentValue / loadingBar.maxValue),
+	loadingBar.loadingBarHeight);
+	
+		
+	int percentage = std::ceil(((loadingBar.currentValue / loadingBar.maxValue) * 100) - 0.49);
+
+	setDrawColor(loadingBar.valueColor);
+	loadingBar.valueText = std::to_string(percentage) + "%";
+	drawText(loadingBar.valueText, loadingBar.loadingBarXPos + (loadingBar.loadingBarWidth / 2), loadingBar.loadingBarYPos);
+
+	
+	
+
+
+}
+
+void GraphicsEngine::Draw9Slice(SDL_Texture* cornerTexture,
+	SDL_Texture* edgeXTexture, SDL_Texture* edgeYTexture, 
+	SDL_Texture* centreTexture, int xPos, 
+	int yPos, int width, int height, int cornerSize)
+{
+	SDL_Rect rect = { xPos, yPos, cornerSize, cornerSize };
+
+	//Corners
+	drawTexture(cornerTexture, &rect);
+	rect = { xPos - cornerSize + width, yPos,  cornerSize, cornerSize };
+	drawTexture(cornerTexture, &rect);
+	rect = { xPos , yPos - cornerSize + height,  cornerSize, cornerSize };
+	drawTexture(cornerTexture, &rect);
+	rect = { xPos - cornerSize + width, yPos - cornerSize + height,  cornerSize, cornerSize };
+	drawTexture(cornerTexture, &rect);
+
+	//Horiozontal Edge
+	rect = { xPos + (cornerSize / 2), yPos ,  width - cornerSize, cornerSize };
+	drawTexture(edgeXTexture, &rect);
+	rect = { xPos + (cornerSize / 2), yPos - cornerSize + height ,  width - cornerSize, cornerSize };
+	drawTexture(edgeXTexture, &rect);
+
+	//Vertical Edge
+	rect = { xPos ,  yPos + (cornerSize / 2), cornerSize , height - cornerSize };
+	drawTexture(edgeYTexture, &rect);
+	rect = { xPos - cornerSize + width,  yPos + (cornerSize / 2), cornerSize , height - cornerSize };
+	drawTexture(edgeYTexture, &rect);
+
+	//Centre
+	rect = { xPos + (cornerSize / 2),  yPos + (cornerSize / 2), width - cornerSize, height - cornerSize };
+	drawTexture(centreTexture, &rect);
+
+
+}
+
+

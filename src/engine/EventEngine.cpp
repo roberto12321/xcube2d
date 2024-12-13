@@ -82,3 +82,82 @@ Point2 EventEngine::getMousePos() {
 	SDL_GetMouseState(&pos.x, &pos.y);
 	return pos;
 }
+
+
+//My code
+
+//Button code
+
+int EventEngine::CheckButtonCollision(Button button) {
+	int output;
+	if (getMousePos().x > button.xPos &&
+		getMousePos().x < button.xPos + button.width &&
+		getMousePos().y > button.yPos &&
+		getMousePos().y < button.yPos + button.height &&
+		isPressed(BTN_LEFT))
+	{
+		//Output one is when hovering and clicked
+		output = 1;
+	}
+
+	else if (getMousePos().x > button.xPos &&
+		getMousePos().x < button.xPos + button.width &&
+		getMousePos().y > button.yPos &&
+		getMousePos().y < button.yPos + button.height)
+	{
+		//Output two is when hovering and not clicked
+		output = 2;
+	}
+	else 
+	{
+		//Output zero is when not hovered or clicked
+		output = 0;
+	}
+	return output;
+}
+
+//Slider code
+
+int EventEngine::CheckSliderCollision(Slider slider){
+	int output;
+
+
+
+	if (getMousePos().x > slider.sliderXPos &&
+		getMousePos().x < slider.sliderXPos + slider.sliderWidth &&
+		getMousePos().y > slider.sliderYPos &&
+		getMousePos().y < slider.sliderYPos + slider.sliderHeight &&
+		isPressed(BTN_LEFT))
+	{
+		//std::cout << "slider clicked" << std::endl;
+		float mouseXValue = getMousePos().x - slider.sliderXPos;
+		//std::cout << "mousexvalue" << mouseXValue << std::endl;
+		output = std::ceil(((mouseXValue / slider.sliderWidth) * slider.maxValue) - 0.49);
+		//std::cout << "slider clicked" << output << std::endl;
+	}
+
+
+
+	else
+	{
+		output = slider.currentValue;
+	}
+
+	return output;
+}
+
+//Event code
+
+bool EventEngine::isJustPressed(Mouse btn) {
+	
+	if (isPressed(btn))
+	{
+		justPressedInt++;
+		if (justPressedInt == 1) return true;	
+	}
+	else
+	{
+		justPressedInt = 0;
+	}
+	return false;
+}

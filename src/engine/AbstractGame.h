@@ -18,6 +18,9 @@ class AbstractGame {
 		std::shared_ptr<EventEngine> eventSystem;
 		std::shared_ptr<PhysicsEngine> physics;
         std::shared_ptr<MyEngineSystem> mySystem;
+		std::shared_ptr<Button> buttonSystem;
+		
+
 
 		/* Main loop control */
 		bool running;

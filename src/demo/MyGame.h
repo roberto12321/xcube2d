@@ -11,9 +11,12 @@ struct GameKey {
 class MyGame : public AbstractGame {
 	private:
 		Rect box;
-
+		Button button[25];
+		Slider slider[25];
+		LoadingBar loadingBar[25];
+		
 		Vector2i velocity;
-
+		SDL_Texture * texture;
 		std::vector<std::shared_ptr<GameKey>> gameKeys;
 
 		/* GAMEPLAY */

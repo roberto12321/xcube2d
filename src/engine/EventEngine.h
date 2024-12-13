@@ -6,6 +6,7 @@
 
 #include <SDL.h>
 
+#include "custom/MyEngineSystem.h"
 #include "EngineCommon.h"
 #include "GameMath.h"
 
@@ -24,7 +25,7 @@ class EventEngine {
 		SDL_Event event;
 		bool keys[Key::LAST];
 		bool buttons[Mouse::BTN_LAST];
-
+		int justPressedInt;
 		void updateKeys(const SDL_Keycode &, bool);
 
 		EventEngine();
@@ -59,6 +60,18 @@ class EventEngine {
 		* Returns current mouse position relative to the window
 		*/
 		Point2 getMousePos();
+
+
+		//My code
+
+		//Button code
+		int CheckButtonCollision(Button button);
+
+		//Slider Code
+		int CheckSliderCollision(Slider slider);
+
+		//Event code
+		bool isJustPressed(Mouse);
 };
 
 #endif
