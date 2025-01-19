@@ -6,6 +6,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
+
 
 #include <string>
 
@@ -28,13 +30,22 @@ class Button {
 	friend class XCube2Engine;
 	private:
 		
-
 	public:
 		int xPos;
 		int yPos;
 		int width;
-		int cornerSize;
 		int height;
+		int cornerSize;
+		
+		int buttonState;
+		bool pressed;
+		bool released;
+
+		Mix_Chunk* buttonSound;
+
+		SDL_Texture* textTexture;
+
+		//9Slice textures
 		SDL_Texture* hoverCornerTexture;
 		SDL_Texture* clickCornerTexture;
 		SDL_Texture* idleCornerTexture;
@@ -50,10 +61,7 @@ class Button {
 		SDL_Texture* hoverCentreTexture;
 		SDL_Texture* clickCentreTexture;
 		SDL_Texture* idleCentreTexture;
-
-		//SDL_Color textColor;
-		//std::string text;
-		int buttonState;
+		
 		
 };
 
@@ -67,15 +75,14 @@ public:
 	int sliderYPos;
 	int sliderWidth;
 	int sliderHeight;
-	//Point2 circleCentre;
-	int circleRadius;
-	int currentValue;
-	int maxValue;
-	SDL_Color sliderColor;
-	SDL_Color circleColor;
+	float currentValue;
+	float maxValue;
+	bool heldDown = false;
+	SDL_Texture* baseTexture;
+	SDL_Texture* fillTexture;
+	SDL_Texture* notchTexture;
 	SDL_Color valueColor;
 	std::string valueText;
-	
 
 };
 
@@ -90,9 +97,9 @@ public:
 	int loadingBarWidth;
 	int loadingBarHeight;
 	float currentValue;
-	float maxValue;
-	SDL_Color backgroundColor;
-	SDL_Color barColor;
+	int maxValue;
+	SDL_Texture* fillTexture;
+	SDL_Texture* coverTexture;
 	SDL_Color valueColor;
 	std::string valueText;
 

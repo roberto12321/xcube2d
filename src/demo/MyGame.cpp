@@ -14,62 +14,102 @@ MyGame::MyGame() : AbstractGame(), score(0), lives(3), numKeys(5), gameWon(false
         k->pos = Point2(getRandom(0, 750), getRandom(0, 550));
         gameKeys.push_back(k);
     }
-	//Construct button here
-	for (int i = 0; i < 25; i++) {
+	//Initialize scene value
+	scene = 1;
 
-		button[i].hoverCornerTexture = texture = ResourceManager::loadTexture("res/button_hover_corner.png", SDL_COLOR_GRAY);
-		button[i].clickCornerTexture = texture = ResourceManager::loadTexture("res/button_click_corner.png", SDL_COLOR_GRAY);
-		button[i].idleCornerTexture = texture = ResourceManager::loadTexture("res/button_idle_corner.png", SDL_COLOR_GRAY);
+	//Assign textures
+	bgTexture = ResourceManager::loadTexture("res/fantasy_background.jpg", SDL_COLOR_BLACK);
+	playerTexture = ResourceManager::loadTexture("res/player.png", SDL_COLOR_BLACK);
+	enemyTexture = ResourceManager::loadTexture("res/enemy.png", SDL_COLOR_BLACK);
 
-		button[i].hoverXEdgeTexture = texture = ResourceManager::loadTexture("res/button_hover_x_edge.png", SDL_COLOR_GRAY);
-		button[i].clickXEdgeTexture = texture = ResourceManager::loadTexture("res/button_click_x_edge.png", SDL_COLOR_GRAY);
-		button[i].idleXEdgeTexture = texture = ResourceManager::loadTexture("res/button_idle_x_edge.png", SDL_COLOR_GRAY);
+	//Button
+	for (int i = 0; i < 9; i++) {
 
-		button[i].hoverYEdgeTexture = texture = ResourceManager::loadTexture("res/button_hover_y_edge.png", SDL_COLOR_GRAY);
-		button[i].clickYEdgeTexture = texture = ResourceManager::loadTexture("res/button_click_y_edge.png", SDL_COLOR_GRAY);
-		button[i].idleYEdgeTexture = texture = ResourceManager::loadTexture("res/button_idle_y_edge.png", SDL_COLOR_GRAY);
+		button[i].hoverCornerTexture = ResourceManager::loadTexture("res/button_hover_corner.png", SDL_COLOR_GRAY);
+		button[i].clickCornerTexture = ResourceManager::loadTexture("res/button_click_corner.png", SDL_COLOR_GRAY);
+		button[i].idleCornerTexture = ResourceManager::loadTexture("res/button_idle_corner.png", SDL_COLOR_GRAY);
+
+		button[i].hoverXEdgeTexture = ResourceManager::loadTexture("res/button_hover_x_edge.png", SDL_COLOR_GRAY);
+		button[i].clickXEdgeTexture = ResourceManager::loadTexture("res/button_click_x_edge.png", SDL_COLOR_GRAY);
+		button[i].idleXEdgeTexture = ResourceManager::loadTexture("res/button_idle_x_edge.png", SDL_COLOR_GRAY);
+
+		button[i].hoverYEdgeTexture = ResourceManager::loadTexture("res/button_hover_y_edge.png", SDL_COLOR_GRAY);
+		button[i].clickYEdgeTexture = ResourceManager::loadTexture("res/button_click_y_edge.png", SDL_COLOR_GRAY);
+		button[i].idleYEdgeTexture = ResourceManager::loadTexture("res/button_idle_y_edge.png", SDL_COLOR_GRAY);
 		
-		button[i].idleCentreTexture = texture = ResourceManager::loadTexture("res/button_idle_centre.png", SDL_COLOR_GRAY);
-		button[i].hoverCentreTexture = texture = ResourceManager::loadTexture("res/button_hover_centre.png", SDL_COLOR_GRAY);
-		button[i].clickCentreTexture = texture = ResourceManager::loadTexture("res/button_click_centre.png", SDL_COLOR_GRAY);
-
-		//button[i].text = "Sample Text";
-		//button[i].textColor = SDL_COLOR_BLACK;
-		button[i].xPos = 50;
-		button[i].yPos = 100;
-		button[i].width = 392;
+		button[i].idleCentreTexture = ResourceManager::loadTexture("res/button_idle_centre.png", SDL_COLOR_GRAY);
+		button[i].hoverCentreTexture = ResourceManager::loadTexture("res/button_hover_centre.png", SDL_COLOR_GRAY);
+		button[i].clickCentreTexture = ResourceManager::loadTexture("res/button_click_centre.png", SDL_COLOR_GRAY);
+		button[i].textTexture = ResourceManager::loadTexture("res/button_text_" + std::to_string(i) + ".png", SDL_COLOR_GRAY);
+		button[i].buttonSound = ResourceManager::loadSound("res/Audio/click.wav");
+		
 		button[i].cornerSize = 32;
-		button[i].height = 96;	
+		button[i].xPos = 0;
+		button[i].yPos = 0;
+		button[i].width = 512;
+		button[i].height = 128;	
+	}
+
+	music = ResourceManager::loadSound("res/Audio/synth.wav");
+
+	//Button positions
+	//Scene 1
+	for (int i = 0; i < 3; i++)
+	{
+		button[i].xPos = 384;
+		button[i].yPos = 120 + (i * 160);
+
+	}
+	//Scene 2
+	for (int i = 0; i < 4; i++)
+	{
+		offset = 7;
+		button[i + offset].xPos = 85 + (i * 597);
+		button[i + offset].yPos = 537;
+	}
+	//Scene 3
+	offset = 6;
+	button[offset].xPos = 718;
+	button[offset].yPos = 542;
+	
+	//Scene 4
+	for (int i = 0; i < 3; i++)
+	{
+		offset = 3;
+		button[i + offset].xPos = 384;
+		button[i + offset].yPos = 120 + (i * 160);
+
 	}
 	
+	//Slider
+	for (int i = 0; i < 2; i++)
+	{
+		slider[i].sliderXPos = 384;
+		slider[i].sliderYPos = 192 + (i * 128);
+		slider[i].sliderWidth = 512;
+		slider[i].sliderHeight = 32;
+		slider[i].currentValue = 100;
+		slider[i].maxValue = 100;
+		slider[i].valueColor = SDL_COLOR_WHITE;
+		slider[i].baseTexture = ResourceManager::loadTexture("res/slider_base.png", SDL_COLOR_GRAY);
+		slider[i].fillTexture = ResourceManager::loadTexture("res/slider_fill.png", SDL_COLOR_GRAY);
+		slider[i].notchTexture = ResourceManager::loadTexture("res/slider_notch.png", SDL_COLOR_GRAY);
 
-
+	}
+	//Loading bar
+	for (int i = 0; i < 2; i++)
+	{
+		loadingBar[i].loadingBarXPos = 256 + (i * 512);
+		loadingBar[i].loadingBarWidth = 256;
+		loadingBar[i].loadingBarHeight = 64;
+		loadingBar[i].currentValue = 50.0;
+		loadingBar[i].loadingBarYPos = 422;
+		loadingBar[i].maxValue = 100.0;
+		loadingBar[i].fillTexture = ResourceManager::loadTexture("res/loading_bar_fill.png", SDL_COLOR_GRAY);
+		loadingBar[i].coverTexture = ResourceManager::loadTexture("res/loading_bar_cover.png", SDL_COLOR_GRAY);
+		loadingBar[i].valueColor = SDL_COLOR_WHITE;
+	}
 	
-
-	//Construct slider here
-	slider[0].sliderXPos = 100;
-	slider[0].sliderYPos = 400;
-	slider[0].sliderWidth = 300;
-	slider[0].sliderHeight = 10;
-	slider[0].circleRadius = 25;
-	slider[0].currentValue = 10;
-	slider[0].maxValue = 10;
-	slider[0].sliderColor = SDL_COLOR_BLUE;
-	slider[0].circleColor = SDL_COLOR_YELLOW;
-	slider[0].valueColor = SDL_COLOR_GREEN;
-
-	//Construct loading bar here
-	loadingBar[0].loadingBarXPos = 300;
-	loadingBar[0].loadingBarYPos = 600;
-	loadingBar[0].loadingBarWidth = 400;
-	loadingBar[0].loadingBarHeight = 100;
-	loadingBar[0].currentValue = 50.0;
-	loadingBar[0].maxValue = 100.0;
-	loadingBar[0].backgroundColor = SDL_COLOR_BLUE;
-	loadingBar[0].barColor = SDL_COLOR_YELLOW;
-	loadingBar[0].valueColor = SDL_COLOR_GREEN;
-
-	//Construct 
 
 	
 }
@@ -79,50 +119,129 @@ MyGame::~MyGame() {
 }
 
 void MyGame::handleKeyEvents() {
-	int speed = 3;
+	
+	//Set volume
+	musicVolume = slider[0].currentValue;
+	sfxVolume = slider[1].currentValue;
+	
+	//Scenes
+	switch (scene) {
+	case 1:
+		//Menu Scene
+		for (int i = 0; i < 3; i++) {
+			button[i].buttonState = eventSystem->CheckButtonCollision(button[i]);
+		}
+		if (button[0].buttonState == 1)
+		{
+			//Reset values of combat scene
+			for (int i = 0; i < 2; i++) 
+			{
+				loadingBar[i].currentValue = loadingBar[i].maxValue;
+			}
+			turn = 1;
+			scene = 2;
+			
+			
+		}
+		if (button[1].buttonState == 1)
+		{
+			scene = 3;
+			lastScene = 1;	
+		}
+		if (button[2].buttonState == 1)
+		{
+			running = false;	
+		}
+		break;
+	case 2:
+		//Combat Scene
+		offset = 7;
+		if (turnEndTime < time && (loadingBar[0].currentValue <= 0 || loadingBar[1].currentValue <= 0))
+		{
+			scene = 1;
+		}
 
-	if (eventSystem->isPressed(Key::W)) {
-		velocity.y = -speed;
+		for (int i = 0; i < 2; i++) {
+			button[i + offset].buttonState = eventSystem->CheckButtonCollision(button[i + offset]);
+		
+		}
+		if (button[offset].buttonState == 1 && turnEndTime < time)
+		{
+			turnEndTime = time + turnDuration;
+			loadingBar[1].currentValue = loadingBar[1].currentValue - 11;
+		}
+		if (button[offset + 1].buttonState == 1 && turnEndTime < time)
+		{
+			turnEndTime = time + turnDuration;	
+			loadingBar[0].currentValue = loadingBar[0].currentValue + 13;
+		}
+		if (turnEndTime == time)
+		{
+			loadingBar[0].currentValue = loadingBar[0].currentValue - 9;
+			turn += 1;
+		}
+		if (eventSystem->isPressed(Key::ESC) && turnEndTime < time ) {
+			scene = 4;
+		}
+		break;
+	case 3:
+		//Options menu scene
+		offset = 6;
+		button[offset].buttonState = eventSystem->CheckButtonCollision(button[offset]);
+		if (button[offset].buttonState == 1)
+		{
+			scene = lastScene;
+			
+		}
+		for (int i = 0; i < 2; i++) 
+		{
+			slider[i].currentValue = eventSystem->CheckSliderCollision(slider[i]);
+		}
+	
+		break;
+	case 4:
+		//Pause menu scene
+		offset = 3;
+		for (int i = 0; i < 3; i++) {
+			button[i + offset].buttonState = eventSystem->CheckButtonCollision(button[i + offset]);
+		}
+		if (button[offset].buttonState == 1)
+		{
+			scene = 2;
+			
+		}
+		if (button[offset + 1].buttonState == 1)
+		{
+			lastScene = 4;
+			scene = 3;
+			
+		}
+		if (button[offset + 2].buttonState == 1)
+		{
+			scene = 1;
+			
+		}
+		break;
 	}
-
-	if (eventSystem->isPressed(Key::S)) {
-		velocity.y = speed;
+	for (int i = 0; i < 9; i++) {
+		if (button[i].buttonState == 1)
+		{
+			sfx->PlayButtonSound(button[i], sfxVolume);
+			button[i].buttonState = 0;
+		}
 	}
-
-	if (eventSystem->isPressed(Key::A)) {
-		velocity.x = -speed;
-	}
-
-	if (eventSystem->isPressed(Key::D)) {
-		velocity.x = speed;
-	}
-	if (eventSystem->isJustPressed(Mouse::BTN_LEFT))
-	{
-		std::cout << "Amogus" << std::endl;
-	}
-
-	button[0].buttonState = eventSystem->CheckButtonCollision(button[0]);
-	slider[0].currentValue = eventSystem->CheckSliderCollision(slider[0]);
+	
 }
 
 void MyGame::update() {
-	box.x += velocity.x;
-	box.y += velocity.y;
+	time += 1;
 
-	for (auto key : gameKeys) {
-		if (key->isAlive && box.contains(key->pos)) {
-			score += 200;
-			key->isAlive = false;
-			numKeys--;
-		}
+	if (lastMusicPlay + 350 < time)
+	{
+		lastMusicPlay = time;
+		sfx->PlayMusic(music, musicVolume);
 	}
 
-	velocity.x = 0;
-    velocity.y = 0;
-
-	if (numKeys == 0) {
-		gameWon = true;
-	}
 }
 
 void MyGame::render() {
@@ -130,7 +249,6 @@ void MyGame::render() {
 	gfx->drawRect(box);
 	gfx->fillRect(50,50,50,50);
 	
-	//mySystem->HoverDetection
 
 	gfx->setDrawColor(SDL_COLOR_YELLOW);
 	for (auto key : gameKeys)
@@ -139,44 +257,56 @@ void MyGame::render() {
 }
 
 void MyGame::renderUI() {
-	SDL_Rect rect = {0,0,1280,720};
-	texture = ResourceManager::loadTexture("res/fantasy_background.jpg", SDL_COLOR_BLACK);
-	gfx->drawTexture(texture, &rect);
-	gfx->setDrawColor(SDL_COLOR_AQUA);
-	//mySystem->DrawButton(100, 150, 50, 50);
-	
 
+	//Background
+	SDL_Rect bgRect = { 0,0,1280,720 };
+	gfx->drawTexture(bgTexture, &bgRect);
 	
-	/*if (eventSystem->getMousePos().x > button.xPos &&
-		eventSystem->getMousePos().x < button.xPos + button.width &&
-		eventSystem->getMousePos().y > button.yPos &&
-		eventSystem->getMousePos().y < button.yPos + button.height &&
-		eventSystem->isPressed(BTN_LEFT))
-	{
-		button.color = SDL_COLOR_BLUE;
-	}
-	else if(eventSystem->getMousePos().x > button.xPos &&
-		eventSystem->getMousePos().x < button.xPos + button.width &&
-		eventSystem->getMousePos().y > button.yPos &&
-		eventSystem->getMousePos().y < button.yPos + button.height)
-	{
+	
+	SDL_Rect playerRect = { 256,132,256,256 };
+	SDL_Rect enemyRect = { 768,132,256,256 };
+	//Scenes
+	std::string turnText = "Turn: " + std::to_string(turn);
+	switch (scene) {
+	case 1:
+		for (int i = 0; i < 3; i++) {
+			gfx->DrawButton(button[i]);
+		}
+		break;
+	case 2:
+		offset = 7;
 		
-		button.color = SDL_COLOR_YELLOW;
+		gfx->drawText(turnText, 540, 0);
+		for (int i = 0; i < 2; i++) {
+			
+			gfx->DrawButton(button[i + offset]);
+		}
+		gfx->drawTexture(playerTexture, &playerRect);
+		gfx->drawTexture(enemyTexture, &enemyRect);
+		for (int i = 0; i < 2; i++) {
+			gfx->DrawLoadingBar(loadingBar[i]);
+		}
+		
+		break;
+	case 3:
+		offset = 6;
+		for (int i = 0; i < 2; i++) {
+			gfx->DrawSlider(slider[i]);
+		}
+		gfx->DrawButton(button[offset]);
+		break;
+	case 4:
+		for (int i = 0; i < 3; i++) {
+			offset = 3;
+			gfx->DrawButton(button[i + offset]);
+		}
+		break;
+	
 	}
-	else 
-	{
-		button.color = SDL_COLOR_GREEN;
-	}*/
+
 	
-	gfx->DrawButton(button[0]);
-	gfx->DrawSlider(slider[0]);
-	gfx->DrawLoadingBar(loadingBar[0]);
+	std::string sceneText = "Scene: " + std::to_string(scene);
+	gfx->drawText(sceneText, 0, 0);
 	
-	/*gfx->fillRect(button.xPos, button.yPos, button.width, button.height);
-
-	gfx->setDrawColor(SDL_COLOR_BLACK);
-
-
-	gfx->drawText(button.text, button.xPos, button.yPos);*/
 	
 }

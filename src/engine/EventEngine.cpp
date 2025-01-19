@@ -40,6 +40,7 @@ void EventEngine::updateKeys(const SDL_Keycode &key, bool keyDown) {
 		case SDLK_s:		index = Key::S; break;
 		case SDLK_ESCAPE:	index = Key::ESC; break;
 		case SDLK_SPACE:	index = Key::SPACE; break;
+		case SDLK_p:		index = Key::P; break;
 		default:
 			return;	// we don't care about other keys, at least now
 	}
@@ -90,11 +91,12 @@ Point2 EventEngine::getMousePos() {
 
 int EventEngine::CheckButtonCollision(Button button) {
 	int output;
+	
 	if (getMousePos().x > button.xPos &&
 		getMousePos().x < button.xPos + button.width &&
 		getMousePos().y > button.yPos &&
 		getMousePos().y < button.yPos + button.height &&
-		isPressed(BTN_LEFT))
+		isJustPressed(Mouse::BTN_LEFT))
 	{
 		//Output one is when hovering and clicked
 		output = 1;
@@ -118,31 +120,35 @@ int EventEngine::CheckButtonCollision(Button button) {
 
 //Slider code
 
-int EventEngine::CheckSliderCollision(Slider slider){
+int EventEngine::CheckSliderCollision(Slider &slider){
 	int output;
-
-
-
+	if (slider.heldDown && !isPressed(BTN_LEFT))
+	{
+		slider.heldDown = false;
+		std::cout << "Released" << std::endl;
+	}
 	if (getMousePos().x > slider.sliderXPos &&
 		getMousePos().x < slider.sliderXPos + slider.sliderWidth &&
 		getMousePos().y > slider.sliderYPos &&
 		getMousePos().y < slider.sliderYPos + slider.sliderHeight &&
-		isPressed(BTN_LEFT))
+		isJustPressed(BTN_LEFT) || slider.heldDown)
 	{
-		//std::cout << "slider clicked" << std::endl;
+		slider.heldDown = true;
 		float mouseXValue = getMousePos().x - slider.sliderXPos;
-		//std::cout << "mousexvalue" << mouseXValue << std::endl;
 		output = std::ceil(((mouseXValue / slider.sliderWidth) * slider.maxValue) - 0.49);
-		//std::cout << "slider clicked" << output << std::endl;
+		if (output > slider.maxValue)
+		{
+			output = slider.maxValue;
+		}
+		if (output < 0)
+		{
+			output = 0;
+		}
 	}
-
-
-
 	else
 	{
 		output = slider.currentValue;
 	}
-
 	return output;
 }
 
@@ -153,7 +159,7 @@ bool EventEngine::isJustPressed(Mouse btn) {
 	if (isPressed(btn))
 	{
 		justPressedInt++;
-		if (justPressedInt == 1) return true;	
+		if (justPressedInt == 2) return true;	
 	}
 	else
 	{

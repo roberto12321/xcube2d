@@ -33,3 +33,18 @@ void AudioEngine::playSound(Mix_Chunk * sound, const int & _volume) {
 void AudioEngine::playMP3(Mix_Music * mp3, const int & times) {
 	Mix_PlayMusic(mp3, times);
 }
+
+
+void AudioEngine::PlayButtonSound(Button button, int volume) {
+	if (soundOn) {
+		Mix_VolumeChunk(button.buttonSound, volume);
+		Mix_PlayChannel(-1, button.buttonSound, 0);
+	}
+}
+
+void AudioEngine::PlayMusic(Mix_Chunk* sound, int volume) {
+	if (soundOn) {
+		Mix_VolumeChunk(sound, volume);
+		Mix_PlayChannel(-1, sound, 0);
+	}
+}

@@ -280,69 +280,54 @@ void GraphicsEngine::DrawButton(Button button)
 	{
 		Draw9Slice(button.idleCornerTexture, button.idleXEdgeTexture, button.idleYEdgeTexture, button.idleCentreTexture, button.xPos, button.yPos,button.width, button.height, button.cornerSize);
 	}
-	//setDrawColor(button.textColor);
-	//drawText(button.text, button.xPos, button.yPos);
+	SDL_Rect rect2 = {button.xPos, button.yPos, button.width, button.height};
+	drawTexture(button.textTexture, &rect2);
 }
 
 void GraphicsEngine::DrawSlider(Slider slider)
 {
-	setDrawColor(slider.sliderColor);
-	fillRect(slider.sliderXPos, slider.sliderYPos, slider.sliderWidth, slider.sliderHeight);
-	setDrawColor(slider.circleColor);
-	//slider.circleCentre = Point2(slider.sliderXPos, slider.sliderYPos + (slider.sliderHeight/2));
-	drawEllipse(Point2(slider.sliderXPos + (slider.currentValue * (slider.sliderWidth/slider.maxValue)),
-		slider.sliderYPos + (slider.sliderHeight / 2)), slider.circleRadius, slider.circleRadius);
-	/*draw_circle(renderer, slider.sliderXPos + (slider.currentValue * (slider.sliderWidth / slider.maxValue),
-		slider.sliderYPos + (slider.sliderHeight / 2)), slider.circleRadius, slider.circleRadius);
-	setDrawColor(slider.valueColor);*/
-	slider.valueText = std::to_string(slider.currentValue);
-	drawText(slider.valueText, slider.sliderXPos + slider.sliderWidth, slider.sliderYPos);
-	
-
-
+	SDL_Rect baseRect = { slider.sliderXPos, slider.sliderYPos, slider.sliderWidth, slider.sliderHeight};
+	drawTexture(slider.baseTexture, &baseRect);
+	SDL_Rect fillRect = { slider.sliderXPos + 13, slider.sliderYPos + 4, slider.sliderWidth * (slider.currentValue / slider.maxValue),
+	slider.sliderHeight * 0.75};
+	drawTexture(slider.fillTexture, &fillRect);
+	SDL_Rect notchRect = { slider.sliderXPos + (slider.currentValue * (slider.sliderWidth / slider.maxValue)) - slider.sliderHeight,
+	slider.sliderYPos - (slider.sliderHeight / 2), slider.sliderHeight * 2, slider.sliderHeight * 2};
+	drawTexture(slider.notchTexture, &notchRect);
+	int value = slider.currentValue;
+	slider.valueText = std::to_string(value);
+	setDrawColor(slider.valueColor);
+	drawText(slider.valueText, slider.sliderXPos + slider.sliderWidth + 32, slider.sliderYPos - 24);
 }
-/* Draws circle - https://stackoverflow.com/questions/65723827/sdl2-function-to-draw-a-filled-circle */
-void GraphicsEngine::draw_circle(SDL_Renderer* renderer, int x, int y, int radius, SDL_Color color)
+
+
+void GraphicsEngine::DrawLoadingBar(LoadingBar &loadingBar)
 {
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-	for (int w = 0; w < radius * 2; w++)
+	//Clamp values
+	if (loadingBar.currentValue < 0)
 	{
-		for (int h = 0; h < radius * 2; h++)
-		{
-			int dx = radius - w; // horizontal offset
-			int dy = radius - h; // vertical offset
-			if ((dx * dx + dy * dy) <= (radius * radius))
-			{
-				SDL_RenderDrawPoint(renderer, x + dx, y + dy);
-			}
-		}
+		loadingBar.currentValue = 0;  
 	}
-}
-
-void GraphicsEngine::DrawLoadingBar(LoadingBar loadingBar)
-{
-
+	if (loadingBar.currentValue > loadingBar.maxValue)
+	{
+		loadingBar.currentValue = loadingBar.maxValue;
+	}
 	
-	setDrawColor(loadingBar.backgroundColor);
+	setDrawColor(SDL_COLOR_BLACK);
 	fillRect(loadingBar.loadingBarXPos, loadingBar.loadingBarYPos, loadingBar.loadingBarWidth, loadingBar.loadingBarHeight);
 	
-	
-	setDrawColor(loadingBar.barColor);
-	fillRect(loadingBar.loadingBarXPos, loadingBar.loadingBarYPos,
-	loadingBar.loadingBarWidth * (loadingBar.currentValue / loadingBar.maxValue),
-	loadingBar.loadingBarHeight);
-	
+	SDL_Rect fillRect = { loadingBar.loadingBarXPos + 4, loadingBar.loadingBarYPos,
+	(loadingBar.loadingBarWidth - 8) * (loadingBar.currentValue / loadingBar.maxValue),loadingBar.loadingBarHeight };
+	drawTexture(loadingBar.fillTexture, &fillRect);
+	SDL_Rect coverRect = { loadingBar.loadingBarXPos, loadingBar.loadingBarYPos, loadingBar.loadingBarWidth, loadingBar.loadingBarHeight };
+	drawTexture(loadingBar.coverTexture, &coverRect);
 		
 	int percentage = std::ceil(((loadingBar.currentValue / loadingBar.maxValue) * 100) - 0.49);
 
 	setDrawColor(loadingBar.valueColor);
 	loadingBar.valueText = std::to_string(percentage) + "%";
-	drawText(loadingBar.valueText, loadingBar.loadingBarXPos + (loadingBar.loadingBarWidth / 2), loadingBar.loadingBarYPos);
-
-	
-	
-
-
+	drawText(loadingBar.valueText, loadingBar.loadingBarXPos + (loadingBar.loadingBarWidth / 4),
+	loadingBar.loadingBarYPos - 8);
 }
 
 void GraphicsEngine::Draw9Slice(SDL_Texture* cornerTexture,
@@ -376,8 +361,6 @@ void GraphicsEngine::Draw9Slice(SDL_Texture* cornerTexture,
 	//Centre
 	rect = { xPos + (cornerSize / 2),  yPos + (cornerSize / 2), width - cornerSize, height - cornerSize };
 	drawTexture(centreTexture, &rect);
-
-
 }
 
 

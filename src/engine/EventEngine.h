@@ -11,7 +11,7 @@
 #include "GameMath.h"
 
 enum Key {
-	W, S, A, D, ESC, SPACE, UP, DOWN, LEFT, RIGHT, QUIT, LAST
+	W, S, A, D, P, ESC, SPACE, UP, DOWN, LEFT, RIGHT, QUIT, LAST
 };
 
 enum Mouse {
@@ -68,7 +68,7 @@ class EventEngine {
 		int CheckButtonCollision(Button button);
 
 		//Slider Code
-		int CheckSliderCollision(Slider slider);
+		int CheckSliderCollision(Slider &slider);
 
 		//Event code
 		bool isJustPressed(Mouse);

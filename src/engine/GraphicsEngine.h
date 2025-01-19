@@ -156,14 +156,14 @@ class GraphicsEngine {
 		void DrawSlider(Slider slider);
 
 		//Loading bar
-		void DrawLoadingBar(LoadingBar loadingBar);
+		void DrawLoadingBar(LoadingBar &loadingBar);
 
 		//9Slice Texture draw
 		void Draw9Slice(SDL_Texture* cornerTexture, SDL_Texture* edgeXTexture,
 		SDL_Texture* edgeYTexture, SDL_Texture* centreTexture,
 		int xPos, int yPos, int width, int height, int cornerSize);
 		
-		void draw_circle(SDL_Renderer*, int, int, int, SDL_Color);
+		
 };
 
 typedef GraphicsEngine GFX;

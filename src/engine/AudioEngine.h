@@ -4,6 +4,7 @@
 #include <SDL_mixer.h>
 
 #include "EngineCommon.h"
+#include "custom/MyEngineSystem.h"
 
 class AudioEngine {
 	friend class XCube2Engine;
@@ -39,6 +40,10 @@ class AudioEngine {
 		* @param times - number of times, -1 will play indefinitely
 		*/
 		void playMP3(Mix_Music * mp3, const int & times);
+
+
+		void PlayButtonSound(Button button, int volume);
+		void PlayMusic(Mix_Chunk* sound, int volume);
 };
 
 #endif
